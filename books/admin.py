@@ -3,7 +3,7 @@ from django.contrib import admin
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'isbn', 'author')
+    list_display = ('id', 'title', 'isbn', 'author', 'shelf')
     readonly_fields = ('created_at',)
 
 

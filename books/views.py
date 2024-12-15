@@ -2,6 +2,7 @@ from .models import Book
 from .serializers import BookSerializer
 from accounts.models import User
 from accounts.permissions import IsVerified
+from bookshelves.models import Bookshelf
 from django.db.models import Q
 from django.shortcuts import render
 from rest_framework import status
@@ -11,13 +12,21 @@ from rest_framework.response import Response
 
 @api_view(['POST'])
 @permission_classes([IsVerified])
-def add_book(request):
+def add_book(request, shelf_id:int):
     if request.method == 'POST':
+        try:
+            shelf = Bookshelf.objects.get(user=request.user, id=shelf_id)
+        except Bookshelf.DoesNotExist:
+            return Response({
+                'success':True,
+                'message':'Bookshelf does not exist'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
         serializer = BookSerializer(data=request.data)
         print(request.user)
 
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save(user=request.user, shelf=shelf)
 
             return Response({
                 'success':True,

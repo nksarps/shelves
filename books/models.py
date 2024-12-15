@@ -1,5 +1,6 @@
 import uuid
 from accounts.models import User
+from bookshelves.models import Bookshelf
 from django.db import models
 
 
@@ -19,6 +20,7 @@ class Book(models.Model):
     genre = models.CharField(max_length=100)
     status = models.CharField(max_length=50, choices=READING_STATUS, default='not_started')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shelf = models.ForeignKey(Bookshelf, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

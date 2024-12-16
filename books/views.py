@@ -184,3 +184,42 @@ def filter_books_by_genre(request):
             'success':True,
             'books':serializer.data
         }, status=status.HTTP_200_OK)
+
+
+@api_view(['PUT'])
+@permission_classes([IsVerified])
+def update_books_bookshelf(request, book_id:str, shelf_id:int):
+    try:
+        book = Book.objects.get(user=request.user, id=book_id)
+        shelf = Bookshelf.objects.get(user=request.user, id=shelf_id)
+
+        book.shelf = shelf
+        book.save()
+
+        return Response({
+            'success':True,
+            'message':f'Book successfuly updated to {shelf}'
+        }, status=status.HTTP_200_OK)
+    except Book.DoesNotExist as e:
+        return Response({
+            'success':False,
+            'message':'Book does not exist'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Bookshelf.DoesNotExist as e:
+        return Response({
+            'success':False,
+            'message':'Bookshelf does not exist'
+        }, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({
+            'success':False,
+            'message':str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    book.shelf = shelf
+    book.save()
+
+    return Response({
+        'success':True,
+        'message':f'Book successfuly updated to {shelf}'
+    }, status=status.HTTP_200_OK)

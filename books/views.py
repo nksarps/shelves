@@ -23,7 +23,6 @@ def add_book(request, shelf_id:int):
             }, status=status.HTTP_404_NOT_FOUND)
         
         serializer = BookSerializer(data=request.data)
-        print(request.user)
 
         if serializer.is_valid():
             serializer.save(user=request.user, shelf=shelf)
